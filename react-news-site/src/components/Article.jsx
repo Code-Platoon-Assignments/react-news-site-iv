@@ -1,32 +1,26 @@
-import {Image, Container, Row, Col } from 'react-bootstrap'
-// import Image from 'react-bootstrap/Image'
+import { Container, Row, Col } from 'react-bootstrap'
 // import Container from 'react-bootstrap/Container'
 // import Row from 'react-bootstrap/Row'
 // import Col from 'react-bootstrap/Col'
 
 
-function Article ({ image, title, byline, created_date, abstract}){
+function Article ({ title, created_at, url, author }){
 
     return(
         <Container >
             <Row className='article'>
-                <Col lg='3' className='my-col' >
-                    {image ? <Image  width={image.width} height={image.height} rounded src={image.url}/>
-                                 : <p> image not found </p> 
-                    } 
-                </Col>
-                <Col lg='9'>
+                <Col lg='12'>
                     <Row>
                         <h1>{title}</h1>
                     </Row>
                     <Row>
-                        <p>{created_date}</p>
+                        <p>{created_at}</p>
                     </Row>
                     <Row>
-                        { byline && <h2>{ byline }</h2> }
+                        <h2>{ author }</h2>
                     </Row>
                     <Row>
-                        <p>{abstract}</p>
+                        { url && <a href={url}>{url}</a> }
                     </Row>
 
                 </Col>

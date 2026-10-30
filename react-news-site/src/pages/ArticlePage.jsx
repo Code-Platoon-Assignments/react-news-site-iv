@@ -1,11 +1,15 @@
-import {useParams} from 'react-router-dom'
+import {useParams, useOutletContext} from 'react-router'
 import Article from '../components/Article'
 
-function ArticlePage ({articles}){
+function ArticlePage (){
+
+    const { articles } = useOutletContext()
 
     let {articleID} = useParams()
 
-    const article = articles[articleID-1] // -1 because we added 1 in the url to make it restful
+    const article = articles.find((article) => article.objectID === articleID)
+
+    if (!article) return <p>Article not found</p>
 
     return (
         <div>

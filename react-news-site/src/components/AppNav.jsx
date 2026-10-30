@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router'
 import { useState } from 'react'
 import {Navbar, Nav} from 'react-bootstrap'
 import Search from './Search'
@@ -16,13 +16,13 @@ function AppNav (props){
                 CP News
             </Navbar.Brand>
             <Nav>
-                <Nav.Link href='/'>
+                <Nav.Link as={Link} to='/'>
                     HOME
                 </Nav.Link>
                 {
                     navItems.map(((navItem, index) => {
                         return(
-                            <Nav.Link key={index} href={`/#/sections/${navItem.value}`} onClick={() => console.log(navItem.value)}> 
+                            <Nav.Link key={index} as={Link} to={`/sections/${navItem.label}`} onClick={() => console.log(navItem.label)}> 
                                 {navItem.label}
                             </Nav.Link>
                         )
