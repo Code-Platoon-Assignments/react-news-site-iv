@@ -10,7 +10,7 @@ function ArticleList ({articles}) {
     return(
         <div>
             {articles.map((article) => (
-                <ArticleTeaser key={article.id} {...article}/>
+                <ArticleTeaser key={article.objectID} {...article}/>
                 ))
             }
         </div>

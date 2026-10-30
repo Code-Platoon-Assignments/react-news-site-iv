@@ -21,19 +21,20 @@ Again you have a choice to either use the solution code provided in this repo or
  - src/pages/HomePage.jsx
  - src/pages/ArticlePage.jsx
  - src/pages/SectionPage.jsx
+ - src/router.jsx
  - package.json
 
-Once you've copied over these files, run ```npm install```  and then ```npm run dev``` - verify that no errors appear in your browser console or terminal, and that your app functions the same as it did in the last challenge.
+The project lives in the `react-news-site` folder. Once you've copied over these files, `cd react-news-site`, run ```npm install```  and then ```npm run dev``` (React Router 8 needs Node 22.22+; the devcontainer uses Node 24) - verify that no errors appear in your browser console or terminal, and that your app functions the same as it did in the last challenge.
 
 ## The News/Article API
 So far, the data that drives our News Site has been contained within a static JSON file - `./src/data/news.json`.  We will now begin connecting our front-end to the hacker news API, that provides real news data. We should define at least 3 functions that help us fetch data from the API.
 
 The functions are:
 - `fetchArticleByID(id)` - given an article ID, returns an Article object with the given ID.
-- `fetchArticlesBySection(section)` - returns a list of articles whose `section` attribute matches the section argument.
+- `fetchArticlesBySection(section)` - returns a list of articles in that section. Hacker News articles have no `section` attribute; the section is one of their `_tags` (for example `ask_hn` or `show_hn`), and the API can filter by tag.
 - `fetchArticles(filters)` - returns a list of articles. The filters argument is optional - if no filters are provided, an array of all the articles are returned. If filters are provided, an array of Articles that meet the criteria are returned.
 
-For this, we want you to use async/await.
+For this, we want you to use async/await. Install axios first: `npm install axios`.
 - To make API calls to outside resources within your React app, you have to use axios to make `get` requests
 - axios is asynchronous (i.e., not synchronous / happening out of order)
 - `axios.get` returns a Javascript `Promise` object. These `Promise` objects are basically Javascript's immediate response to you, saying "Hey I have received your request. I `Promise` to respond when I can."
@@ -42,7 +43,7 @@ For this, we want you to use async/await.
 
 
 ### React and the Virtual DOM
-Before we dive into how our page compoments will use our client-side API methods, let's take a quick detour to better understand how React components work. For the sake of time, we'll keep this explanation at a high-level. For a deeper explanation, you can check out this [handy blog post](https://programmingwithmosh.com/react/react-virtual-dom-explained/) about the Virtual DOM. React itself just lightly touches upon the subject in its FAQ [here](https://reactjs.org/docs/faq-internals.html).
+Before we dive into how our page compoments will use our client-side API methods, let's take a quick detour to better understand how React components work. For the sake of time, we'll keep this explanation at a high-level. For a deeper explanation, you can check out this [handy blog post](https://programmingwithmosh.com/react/react-virtual-dom-explained/) about the Virtual DOM. React itself just lightly touches upon the subject in its FAQ [here](https://legacy.reactjs.org/docs/faq-internals.html).
 
 The first thing to know is that traditional DOM manipulation is very slow. React quickly gained popularity as a framework because of its speed. Instead of repainting the _entire_ DOM whenever state is changed, React keeps a "virtual" representation of what the UI should look like, and when state changes, it compares the updated "virtual" representation to the actual DOM, identifies the differences, and _only_ updates what has changed.
 
@@ -61,7 +62,7 @@ An example of making an api call and consuming the response:
 ```javascript
 import { useState, useEffect } from 'react'
 
-function Component {
+function Component() {
   const [someDataFromAnAPI, setSomeDataFromAnAPI] = useState(null)
 
   async function getData() {
@@ -91,7 +92,7 @@ We are using the `useEffect()` hook to tell React what we want to do after our c
 But why do we have an inner function `getData`?
 `useEffect()` cannot be made into an async funtion. Therefore, when fetching data asynchronously, the common pattern is to create an inner `async/await` function, and then call it only if a certain condition is met (in this case, we only call it if we don't have data yet). So the cycle goes: component is mounted and rendered to the DOM --> `useEffect()` is called and sees that we don't have data, so it calls `getData()`, which sets the component state --> the component is re-rendered with the updated data --> `useEffect()` is called again, but it sees we have data, so it does nothing.
 
-There are several other use cases for `useEffect()`, but we'll stick to this for now. Using this pattern, go ahead and refactor `HomePage.js` and `ArticlePage.js` as functional components that use the `useEffect()` hook.
+There are several other use cases for `useEffect()`, but we'll stick to this for now. Using this pattern, go ahead and refactor `HomePage.jsx` and `ArticlePage.jsx` as functional components that use the `useEffect()` hook.
 
 We start with state containing a null value for the `someDataFromAnAPI` key. In the `async getData()` method, we're telling React that we're about to run an asynchronous method (`CallAPI()`). We `await` for `CallAPI()` to finish before setting its resolved response to `jsonResponse` and then setting our Component's state.
 
@@ -101,7 +102,7 @@ The final goal here is to recreate the [hackernews website](https://news.ycombin
 Here's what to work on next:
 - Complete the three api functions: `fetchArticleByID`,`fetchArticles`, and `fetchArticlesBySection`
 - Update the `data/sections.json` file to have sections that match the HN site
-- Integrate the above api consumption pattern fully into your page files `src/pages/HomePage.js` , `src/pages/ArticlePage.js` and `src/pages/SectionPage.js` so that they are functional and each fetch the data related to them
+- Integrate the above api consumption pattern fully into your page files `src/pages/HomePage.jsx` , `src/pages/ArticlePage.jsx` and `src/pages/SectionPage.jsx` so that they are functional and each fetch the data related to them
    - this will probably mean refactoring the child components as well to work with our new pattern
 - And of course, most importantly, is styling :) 
 

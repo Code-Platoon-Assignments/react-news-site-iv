@@ -1,8 +1,10 @@
+import { useOutletContext } from "react-router"
 import ArticleList from "../components/ArticleList"
 import Search from "../components/Search"
 
 
-function HomePage ({articles}){
+function HomePage (){
+    const { articles } = useOutletContext()
 
 
     return (
